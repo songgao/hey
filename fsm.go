@@ -37,7 +37,11 @@ func fsm_heuristic(conn io.ReadWriter, log io.Writer, args string) (next transit
 }
 
 func fsm_msg(conn io.ReadWriter, log io.Writer, args string) (next transition, rest string, err error) {
-	fmt.Fprintf(log, "Message: %s\n", args)
-	conn.Write([]byte(line_to_print("Sure. I'll let " + correct_gender("him") + " know.")))
-	return fsm_start, "", nil
+	_, err = fmt.Fprintf(log, "Message: %s\n", args)
+	if err == nil {
+		conn.Write([]byte(line_to_print("Sure. I'll let " + correct_gender("him") + " know.")))
+	} else {
+		conn.Write([]byte(line_to_print("Something's wrong; " + correct_gender("he") + "'s probably not gonna get the message. Sorry!")))
+	}
+	return fsm_start, "", err
 }
