@@ -20,6 +20,8 @@ func fsm_start(conn io.ReadWriter, log io.Writer, args string) (next transition,
 		return fsm_help, line[5:], nil
 	case strings.HasPrefix(line, "/msg "):
 		return fsm_msg, line[5:], nil
+    case strings.HasPrefix(line, "/about"):
+        return fsm_about, line[6:], nil
 	}
 	return fsm_heuristic, line, nil
 }
@@ -28,7 +30,13 @@ func fsm_help(conn io.ReadWriter, log io.Writer, args string) (next transition, 
 	conn.Write([]byte(line_to_print("Available commands:")))
 	conn.Write([]byte(line_to_print("/help              show this message")))
 	conn.Write([]byte(line_to_print("/msg [content]     leave " + USER_NAME + " a message")))
+	conn.Write([]byte(line_to_print("/about             something about me, the robot")))
 	return fsm_start, "", nil
+}
+
+func fsm_about(conn io.ReadWriter, log io.Writer, args string) (next transition, rest string, err error) {
+    conn.Write([]byte(line_to_print("Hey! I'm open sourced on https://github.com/songgao/hey")))
+    return fsm_start, "", nil
 }
 
 func fsm_heuristic(conn io.ReadWriter, log io.Writer, args string) (next transition, rest string, err error) {
