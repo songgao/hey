@@ -1,7 +1,7 @@
 package main
 
-func line_to_print(line string) []byte {
-	return []byte("\x1b[38;05;4m--- \x1b[0m" + line + "\n")
+func line_to_print(line string) string {
+	return "\x1b[38;05;4m--- \x1b[0m" + line + "\n"
 }
 
 func blank_line() []byte {
